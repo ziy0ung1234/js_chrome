@@ -1,4 +1,23 @@
+const weather = document.querySelector(".js-weather");
+
+
 const COORDS = "coords";
+const API_KEY = "your API Code here.";
+
+function getWeather (latitude, longitude) {
+    fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+    )
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (json) {
+            const temperate = json.main.temp;
+            const place = json.name;
+            weather.innerText = `🌡${temperature.toFixed(1)}℃  🇰🇷${place}`;
+        });
+}
+
 
 function saveCoords (coordsObj) {
     localStorage.setItem(COORDS, JSON.stringify(coords));
@@ -14,6 +33,7 @@ function handleGeoSuccess (position) {
         longitude
     }; //{} obj선언 [] array선언, 세미콜론 안에다 붙이는거 아님!!!!
     saveCoords(coordsObj);
+    getWeather(latitude, longitude);
 }
 
 
@@ -30,7 +50,8 @@ function loadCoords () {
     if(loadedCoords === null) {
         askForCoords();
     } else {
-
+        const parsedCoords = JSON.parse(loadedCoords);
+        getWeather(parsedCoords.latitude, parsedCoords.longitude);
     }
 }
 
